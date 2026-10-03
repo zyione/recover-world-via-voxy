@@ -1,0 +1,44 @@
+plugins {
+    id 'fabric-loom' version '1.14.10'
+}
+version = '0.1.0-beta.1'
+group = 'recovery'
+repositories { mavenCentral() }
+loom { serverOnlyMinecraftJar() }
+dependencies {
+    minecraft 'com.mojang:minecraft:1.21.11'
+    mappings loom.officialMojangMappings()
+    modImplementation 'net.fabricmc:fabric-loader:0.18.4'
+    implementation 'org.rocksdb:rocksdbjni:10.2.1'
+    implementation 'com.github.luben:zstd-jni:1.5.7-6'
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+test { useJUnitPlatform() }
+tasks.register('recover', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'recovery.Main'
+    jvmArgs '-Xmx2G'
+    if (project.hasProperty('recoveryArgs')) args project.property('recoveryArgs').split('\\|')
+}
+tasks.register('runtimeClasspath') {
+    doLast { file('build').mkdirs(); file('build/runtime-classpath.txt').text = sourceSets.main.runtimeClasspath.asPath }
+}
+tasks.register('desktop', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'recovery.RecoveryApp'
+    jvmArgs '-Xmx2G'
+}
+tasks.register('sourceRelease', Zip) {
+    archiveBaseName = 'recover-world-via-voxy'
+    archiveClassifier = 'source'
+    destinationDirectory = layout.buildDirectory.dir('distributions')
+    from(rootProject.projectDir.parentFile) {
+        include 'README.md', 'CHANGELOG.md', 'THIRD_PARTY.md', 'Launch Converter.bat', '.gitignore'
+        include 'converter/src/**', 'converter/gradle/**', 'converter/gradlew.bat'
+        include 'converter/*.gradle', 'converter/gradle.properties', 'converter/Launch Converter.bat'
+        include 'converter/config/defaults.json', 'converter/README.md', 'converter/.gitignore'
+    }
+}

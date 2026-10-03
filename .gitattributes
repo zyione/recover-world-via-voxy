@@ -1,0 +1,8 @@
+* text=auto
+*.java text eol=lf
+*.md text eol=lf
+*.gradle text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.bat text eol=crlf
+*.jar binary

@@ -1,0 +1,23 @@
+# Private source evidence, generated worlds, and downloaded game files
+/.voxy/
+/research/
+/recovered-worlds/
+*.jar
+!converter/gradle/wrapper/gradle-wrapper.jar
+*.mca
+*.mcc
+*.sst
+*.ldb
+*.dat
+*.nbt
+*.zstd
+**/.gradle/
+**/build/
+**/logs/
+**/config/jobs/
+/converter/config/recovery.json
+/converter/config/poc.json
+/converter/config/local*.json
+.idea/
+.vscode/
+*.log
